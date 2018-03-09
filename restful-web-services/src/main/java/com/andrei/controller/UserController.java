@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.andrei.entity.Post;
 import com.andrei.entity.User;
+import com.andrei.service.PostService;
 import com.andrei.service.UserService;
 
 @RestController
@@ -29,6 +31,9 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private PostService postService;
 	
 	@GetMapping
 	public List<User> retrieveAllUsers(){
@@ -60,10 +65,25 @@ public class UserController {
 		return resource ;
 	}
 	
+	
+	@GetMapping("/{userId}/posts")
+	public List<Post> retrievePostFromUser(@PathVariable String userId){
+		return userService.findUserById(Long.parseLong(userId)).getPosts();
+	}	
+
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public void saveUser(@Valid @RequestBody User user) {
 		userService.save(user);
+	}
+	
+	//User creating a post
+	@PostMapping("/{userId}/posts")
+	@ResponseStatus(HttpStatus.CREATED)
+	public void savePostFromUser(@PathVariable String userId, @RequestBody Post post) {
+		User user = userService.findUserById(Long.parseLong(userId));
+		
+		postService.save(user, post);
 	}
 	
 	@DeleteMapping("/{id}")

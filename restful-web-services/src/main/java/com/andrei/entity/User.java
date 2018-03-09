@@ -12,7 +12,6 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModel;
@@ -39,15 +38,16 @@ public class User {
 	@Past
 	private LocalDate birthDate;
 	
-	@JsonIgnore //You can use static filters like that.
+	@JsonIgnore //You can use static filters like that to ignore this field at Rest request
 	private String password;
 	
-	@OneToMany(cascade=CascadeType.ALL)
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="user")
 	private List<Post> posts;
 	
-	public User(String name, LocalDate birthDate) {
+	public User(String name, LocalDate birthDate, String password) {
 		this.name = name;
 		this.birthDate = birthDate;
+		this.password = password;
 	}
 
 	public User(String name, LocalDate birthDate, String password, List<Post> posts) {
