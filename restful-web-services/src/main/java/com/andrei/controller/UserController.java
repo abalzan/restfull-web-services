@@ -36,6 +36,7 @@ public class UserController {
 	private PostService postService;
 	
 	@GetMapping
+	@ResponseStatus(HttpStatus.OK)
 	public List<User> retrieveAllUsers(){
 		return userService.findAllUsers();
 	}
